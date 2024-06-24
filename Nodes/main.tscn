@@ -1,0 +1,141 @@
+[gd_scene load_steps=13 format=3 uid="uid://dfjicg1a5j6t5"]
+
+[ext_resource type="PackedScene" uid="uid://crobseux5kjv3" path="res://Nodes/player.tscn" id="1_qhd5s"]
+[ext_resource type="Script" path="res://Scripts/main.gd" id="1_vef2l"]
+[ext_resource type="PackedScene" uid="uid://7c0dnyomv8eh" path="res://Nodes/mob.tscn" id="2_h3fuw"]
+[ext_resource type="Script" path="res://Scripts/ScoreLabel.gd" id="3_kp4uq"]
+[ext_resource type="FontFile" uid="uid://blqjilba16dnk" path="res://fonts/Montserrat-Medium.ttf" id="4_en324"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v4dp3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_beihx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2x4pf"]
+albedo_color = Color(0.981031, 0.346964, 0.176769, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_w0552"]
+material = SubResource("StandardMaterial3D_2x4pf")
+
+[sub_resource type="Curve3D" id="Curve3D_yigac"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -11, 1, 9, 0, 0, 0, 0, 0, 0, 11, 0, 9, 0, 0, 0, 0, 0, 0, 17, 0, -9, 0, 0, 0, 0, 0, 0, -16, 0, -10, 0, 0, 0, 0, 0, 0, -11, 1, 9),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[sub_resource type="Theme" id="Theme_5vx5u"]
+default_font = ExtResource("4_en324")
+default_font_size = 22
+
+[sub_resource type="Theme" id="Theme_63d7d"]
+default_font = ExtResource("4_en324")
+default_font_size = 33
+
+[node name="Main" type="Node"]
+script = ExtResource("1_vef2l")
+mob_scene = ExtResource("2_h3fuw")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+transform = Transform3D(60, 0, 0, 0, 2, 0, 0, 0, 60, 0, 0, 0)
+shape = SubResource("BoxShape3D_v4dp3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(60, 0, 0, 0, 2, 0, 0, 0, 60, 0, 0, 0)
+mesh = SubResource("BoxMesh_beihx")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.165047, 0.986285, 0, -0.986285, 0.165047, 0, 0, 0)
+
+[node name="Player" parent="." instance=ExtResource("1_qhd5s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CameraPivot" type="Marker3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.258819, 0.965926, 0, -0.965926, 0.258819, 0, 9, 4)
+
+[node name="Cylinders" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.3016, 0.321545, -26.7319)
+
+[node name="MeshInstance3D1" type="MeshInstance3D" parent="Cylinders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.7428, 0, 17.2031)
+mesh = SubResource("CylinderMesh_w0552")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Cylinders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.913, 0, 35.467)
+mesh = SubResource("CylinderMesh_w0552")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Cylinders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.94, 0, 17.912)
+mesh = SubResource("CylinderMesh_w0552")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Cylinders"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.411, 0, 35.952)
+mesh = SubResource("CylinderMesh_w0552")
+skeleton = NodePath("")
+
+[node name="SpawnPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_yigac")
+
+[node name="SpawnLocation" type="PathFollow3D" parent="SpawnPath"]
+transform = Transform3D(-4.37114e-08, 0.0454077, -0.998968, 0, 0.998969, 0.0454076, 1, 1.98483e-09, -4.36663e-08, -11, 1, 9)
+
+[node name="MobTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="UserInterface"]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 20.0
+offset_right = 109.0
+offset_bottom = 51.0
+theme = SubResource("Theme_5vx5u")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Score: 0"
+script = ExtResource("3_kp4uq")
+
+[node name="Retry" type="ColorRect" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.866667, 0, 0.160784, 0.321569)
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="UserInterface/Retry"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -171.5
+offset_top = -20.5
+offset_right = 171.5
+offset_bottom = 20.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_63d7d")
+theme_override_colors/font_color = Color(1, 1, 1, 0.729412)
+text = "Press SPACE to retry"
+
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
